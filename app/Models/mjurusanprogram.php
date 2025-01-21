@@ -5,16 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class mprodi extends Model
+class mjurusanprogram extends Model
 {
     use HasFactory;
 
-    protected $table = 'mprodis';
-    
+    protected $table = 'mjurusanprograms';
+
     protected $fillable = [
-        'NamaProdi',
-        'KodeProdi',
-        'FakultasID',
+        'NamaJurusan',
     ];
 
     public function fakultas()

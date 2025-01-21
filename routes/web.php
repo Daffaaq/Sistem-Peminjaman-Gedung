@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\DemoController;
+use App\Http\Controllers\FakultasController;
 use App\Http\Controllers\Menu\MenuGroupController;
 use App\Http\Controllers\Menu\MenuItemController;
+use App\Http\Controllers\ProdiController;
 use App\Http\Controllers\RoleAndPermission\AssignPermissionController;
 use App\Http\Controllers\RoleAndPermission\AssignUserToRoleController;
 use App\Http\Controllers\RoleAndPermission\ExportPermissionController;
@@ -40,6 +42,13 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::group(['prefix' => 'master-management'], function () {
         // universitas
         Route::resource('universitas', UniversitasController::class);
+
+        // fakultas
+        Route::resource('fakultas', FakultasController::class);
+
+        //prodi
+        Route::resource('program-studi', ProdiController::class);
+        Route::get('/getFakultas', [ProdiController::class, 'getFakultasByUniversitas'])->name('getFakultas');
     });
 
     //user list

@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mprodis', function (Blueprint $table) {
+        Schema::create('mjurusanprograms', function (Blueprint $table) {
             $table->id();
-            $table->string('NamaProdi');
-            $table->string('KodeProdi');
-            $table->unsignedBigInteger('JurusanProgramID');
+            $table->string('NamaJurusan');
+            $table->unsignedBigInteger('FakultasID');
             $table->timestamps();
-            
-            $table->foreign('JurusanProgramID')->references('id')->on('mjurusanprograms')->onDelete('cascade');
+
+            $table->foreign('FakultasID')->references('id')->on('mfakultas')->onDelete('cascade');
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mprodis');
+        Schema::dropIfExists('mjurusanprograms');
     }
 };
