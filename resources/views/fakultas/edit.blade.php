@@ -47,6 +47,25 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="StatusFakultas">Status Fakultas</label>
+                            <select class="form-control @error('StatusFakultas') is-invalid @enderror" id="StatusFakultas"
+                                name="StatusFakultas">
+                                <option value="" disabled>Pilih Status Fakultas</option>
+                                <option value="Active" {{ $fakultas->StatusFakultas == 'Active' ? 'selected' : '' }}>
+                                    Aktif
+                                </option>
+                                <option value="InActive" {{ $fakultas->StatusFakultas == 'InActive' ? 'selected' : '' }}>
+                                    Non Aktif
+                                </option>
+                            </select>
+                            @error('StatusFakultas')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
                             <label for="UniversitasID">Universitas</label>
                             <select class="form-control @error('UniversitasID') is-invalid @enderror" id="UniversitasID"
                                 name="UniversitasID">

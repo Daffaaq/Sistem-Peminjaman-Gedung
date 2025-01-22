@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\FakultasController;
+use App\Http\Controllers\JurusanProgramController;
 use App\Http\Controllers\Menu\MenuGroupController;
 use App\Http\Controllers\Menu\MenuItemController;
 use App\Http\Controllers\ProdiController;
@@ -38,6 +39,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/dashboard', function () {
         return view('home', ['users' => User::get(),]);
     });
+
     //master Management
     Route::group(['prefix' => 'master-management'], function () {
         // universitas
@@ -46,9 +48,14 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         // fakultas
         Route::resource('fakultas', FakultasController::class);
 
+        //jurusan/program
+        Route::resource('jurusan-program', JurusanProgramController::class);
+        Route::get('/getUniversitasType/{universitasID}', [JurusanProgramController::class, 'getUniversitasType'])->name('get-universitas-type');
+
         //prodi
         Route::resource('program-studi', ProdiController::class);
         Route::get('/getFakultas', [ProdiController::class, 'getFakultasByUniversitas'])->name('getFakultas');
+        Route::get('/getJurusanPrograms', [ProdiController::class, 'getJurusanProgramsByUniversitas'])->name('getJurusanProgram');
     });
 
     //user list

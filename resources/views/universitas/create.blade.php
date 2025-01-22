@@ -75,6 +75,37 @@
                             @enderror
                         </div>
 
+                        <div class="form-group">
+                            <label for="StatusUniversitas">Status Universitas</label>
+                            <select class="form-control @error('StatusUniversitas') is-invalid @enderror"
+                                id="StatusUniversitas" name="StatusUniversitas">
+                                <option value="" disabled selected>Pilih Status Universitas</option>
+                                <option value="Active">Aktif</option>
+                                <option value="InActive">Non Aktif</option>
+                            </select>
+                            @error('StatusUniversitas')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="TipeInstitusi">Tipe Institusi</label>
+                            <select class="form-control @error('TipeInstitusi') is-invalid @enderror" id="TipeInstitusi"
+                                name="TipeInstitusi">
+                                <option value="" disabled selected>Pilih Tipe Institusi</option>
+                                <option value="Universitas">Universitas</option>
+                                <option value="Politeknik">Politeknik</option>
+                            </select>
+                            @error('TipeInstitusi')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+
                 </div>
                 <div class="card-footer text-right">
                     <button class="btn btn-primary">Submit</button>

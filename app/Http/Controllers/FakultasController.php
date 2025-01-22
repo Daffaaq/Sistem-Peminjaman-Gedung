@@ -25,12 +25,14 @@ class FakultasController extends Controller
             ->select(
                 'mfakultas.NamaFakultas',
                 'mfakultas.KodeFakultas',
+                'mfakultas.StatusFakultas',
                 'mfakultas.id',
                 'muniversitas.NamaUniversitas' // Kolom dari tabel muniversitas
             )
+            ->where('muniversitas.TipeInstitusi', 'Universitas')
             ->paginate(10);
 
-        $universitas = DB::table('muniversitas')->select('id', 'NamaUniversitas')->get();
+        $universitas = DB::table('muniversitas')->select('id', 'NamaUniversitas')->where('TipeInstitusi', 'Universitas')->get();
 
         return view('fakultas.index', compact('fakultas', 'universitas'));
     }
@@ -40,7 +42,7 @@ class FakultasController extends Controller
      */
     public function create()
     {
-        $universitas = DB::table('muniversitas')->select('id', 'NamaUniversitas')->get();
+        $universitas = DB::table('muniversitas')->select('id', 'NamaUniversitas')->where('TipeInstitusi', 'Universitas')->get();
         // Jika data universitas tidak ditemukan
         if ($universitas->isEmpty()) {
             return redirect()->route('fakultas.index')->with('error', 'Data Universitas Tidak Ditemukan!');

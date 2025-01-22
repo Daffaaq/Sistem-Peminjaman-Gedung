@@ -82,6 +82,46 @@
                             @enderror
                         </div>
 
+                        <div class="form-group">
+                            <label for="StatusUniversitas">Status Universitas</label>
+                            <select class="form-control @error('StatusUniversitas') is-invalid @enderror"
+                                id="StatusUniversitas" name="StatusUniversitas">
+                                <option value="" disabled>Pilih Status Universitas</option>
+                                <option value="Active" {{ $universitas->StatusUniversitas == 'Active' ? 'selected' : '' }}>
+                                    Aktif
+                                </option>
+                                <option value="InActive"
+                                    {{ $universitas->StatusUniversitas == 'InActive' ? 'selected' : '' }}>
+                                    Non Aktif
+                                </option>
+                            </select>
+                            @error('StatusUniversitas')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="TipeInstitusi">Tipe Institusi</label>
+                            <select class="form-control @error('TipeInstitusi') is-invalid @enderror" id="TipeInstitusi"
+                                name="TipeInstitusi">
+                                <option value="" disabled>Pilih Tipe Institusi</option>
+                                <option value="Universitas"
+                                    {{ $universitas->TipeInstitusi == 'Universitas' ? 'selected' : '' }}>
+                                    Universitas
+                                </option>
+                                <option value="Politeknik"
+                                    {{ $universitas->TipeInstitusi == 'Politeknik' ? 'selected' : '' }}>
+                                    Politeknik
+                                </option>
+                            </select>
+                            @error('TipeInstitusi')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                 </div>
                 <div class="card-footer text-right">
                     <button class="btn btn-primary">Update</button>

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('KodeGedung');
             $table->Integer('JumlahLantaiGedung')->nullable();
             $table->integer('kapasitasGedung')->nullable();
-            $table->unsignedBigInteger('FakultasID')->nullable();
+            $table->unsignedBigInteger('FakultasID')->nullable()->index();
+            $table->unsignedBigInteger('JurusanProgramID')->nullable()->index();
             $table->enum('StatusGedung', ['Active', 'InActive']);
             $table->enum('TipeGedung', ['Mandiri', 'Fakultas']);
             $table->text('Keterangan')->nullable();
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('FakultasID')->references('id')->on('mfakultas')->onDelete('cascade');
+            $table->foreign('JurusanProgramID')->references('id')->on('mjurusanprograms')->onDelete('cascade');
         });
     }
 

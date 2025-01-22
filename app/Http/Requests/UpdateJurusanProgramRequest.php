@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 
-class StoreProdiRequest extends FormRequest
+class UpdateJurusanProgramRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,21 +27,20 @@ class StoreProdiRequest extends FormRequest
 
         // Cek tipe universitas
         $universitasTipe = DB::table('muniversitas')->where('id', $universitasID)->value('TipeInstitusi');
+
         $rules = [
-            'NamaProdi' => 'required|string|max:255',
-            'KodeProdi' => 'required|string|max:255',
-            'strata' => 'required|string|max:255',
-            'StatusProdi' => 'required|in:Active,InActive',
+            'NamaJurusanPrograms' => 'required|string|max:255',
+            'KodeJurusanProgram' => 'required|string|max:255',
             'UniversitasID' => 'required|exists:muniversitas,id',
+            'StatusJurusanPrograms' => 'required|string|in:Active,InActive',
         ];
 
-        // Cek tipe institusi dari request untuk menentukan validasi Fakultas dan JurusanProgram
+        // Jika tipe universitas adalah 'Universitas', FakultasID harus diisi
         if ($universitasTipe == 'Universitas') {
             $rules['FakultasID'] = 'required|exists:mfakultas,id';
-            $rules['JurusanProgramID'] = 'required|exists:mjurusanprograms,id';
-        } elseif ($universitasTipe == 'Politeknik') {
-            $rules['FakultasID'] = 'nullable';
-            $rules['JurusanProgramID'] = 'required|exists:mjurusanprograms,id';
+        } else {
+            // Jika tipe Politeknik, FakultasID boleh null
+            $rules['FakultasID'] = 'nullable|exists:mfakultas,id';
         }
 
         return $rules;

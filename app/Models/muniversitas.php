@@ -17,6 +17,8 @@ class muniversitas extends Model
         'AlamatUniversitas',
         'NoTelpUniversitas',
         'EmailUniversitas',
+        'StatusUniversitas',
+        'TipeInstitusi',
     ];
     
 }

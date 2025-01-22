@@ -15,7 +15,8 @@ class mfakultas extends Model
         'id',
         'NamaFakultas',
         'KodeFakultas',
-        'UniversitasID'
+        'UniversitasID',
+        'StatusFakultas',
     ];
 
     public function universitas()

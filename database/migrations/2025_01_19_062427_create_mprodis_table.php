@@ -15,10 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('NamaProdi');
             $table->string('KodeProdi');
-            $table->unsignedBigInteger('JurusanProgramID');
+            $table->string('strata');
+            $table->unsignedBigInteger('JurusanProgramID')->nullable()->index();
+            $table->unsignedBigInteger('FakultasID')->nullable()->index();
+            $table->enum('StatusProdi', ['Active', 'InActive']);
             $table->timestamps();
             
             $table->foreign('JurusanProgramID')->references('id')->on('mjurusanprograms')->onDelete('cascade');
+            $table->foreign('FakultasID')->references('id')->on('mfakultas')->onDelete('cascade');
         });
     }
 

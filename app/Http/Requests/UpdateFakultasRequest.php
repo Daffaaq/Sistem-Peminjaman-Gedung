@@ -25,6 +25,7 @@ class UpdateFakultasRequest extends FormRequest
             'NamaFakultas' => 'required|string|max:255',
             'KodeFakultas' => 'required|string|max:255',
             'UniversitasID' => 'required|exists:muniversitas,id',
+            'StatusFakultas' => 'required|in:Active,InActive',
         ];
     }
 }

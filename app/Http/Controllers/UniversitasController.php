@@ -26,7 +26,13 @@ class UniversitasController extends Controller
             ->when($request->input('NamaUniversitas'), function ($query, $NamaUniversitas) {
                 return $query->where('NamaUniversitas', 'like', '%' . $NamaUniversitas . '%');
             })
-            ->select('id', 'NamaUniversitas', 'KodeUniversitas', 'AlamatUniversitas', 'NoTelpUniversitas', 'EmailUniversitas')
+            ->when($request->filled('TipeInstitusi'), function ($query) use ($request) {
+                return $query->where('TipeInstitusi', $request->input('TipeInstitusi'));
+            })
+            ->when($request->filled('StatusUniversitas'), function ($query) use ($request) {
+                return $query->where('StatusUniversitas', $request->input('StatusUniversitas'));
+            })
+            ->select('id', 'NamaUniversitas', 'KodeUniversitas', 'AlamatUniversitas', 'NoTelpUniversitas', 'EmailUniversitas', 'TipeInstitusi', 'StatusUniversitas')
             ->paginate(10);
 
         return view('universitas.index', compact('universitas'));
@@ -50,7 +56,9 @@ class UniversitasController extends Controller
             'KodeUniversitas' => $request->KodeUniversitas,
             'AlamatUniversitas' => $request->AlamatUniversitas,
             'NoTelpUniversitas' => $request->NoTelpUniversitas,
-            'EmailUniversitas' => $request->EmailUniversitas
+            'EmailUniversitas' => $request->EmailUniversitas,
+            'StatusUniversitas' => $request->StatusUniversitas,
+            'TipeInstitusi' => $request->TipeInstitusi
         ]);
 
         return redirect()->route('universitas.index')->with('success', 'Data berhasil disimpan');
@@ -83,7 +91,9 @@ class UniversitasController extends Controller
             'KodeUniversitas' => $request->KodeUniversitas,
             'AlamatUniversitas' => $request->AlamatUniversitas,
             'NoTelpUniversitas' => $request->NoTelpUniversitas,
-            'EmailUniversitas' => $request->EmailUniversitas
+            'EmailUniversitas' => $request->EmailUniversitas,
+            'StatusUniversitas' => $request->StatusUniversitas,
+            'TipeInstitusi' => $request->TipeInstitusi
         ]);
 
         return redirect()->route('universitas.index')->with('success', 'Data berhasil diupdate');

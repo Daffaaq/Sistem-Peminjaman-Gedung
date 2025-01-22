@@ -4,7 +4,7 @@
     <!-- Main Content -->
     <section class="section">
         <div class="section-header">
-            <h1>Universitas List</h1>
+            <h1>Jurusan Program List</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
                 <div class="breadcrumb-item"><a href="#">Components</a></div>
@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="section-body">
-            <h2 class="section-title">Universitas Management</h2>
+            <h2 class="section-title">Jurusan Program Management</h2>
 
             <div class="row">
                 <div class="col-12">
@@ -23,65 +23,69 @@
                 <div class="col-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h4>Universitas List</h4>
+                            <h4>Jurusan Program List</h4>
                             <div class="card-header-action">
                                 <a class="btn btn-icon icon-left btn-primary"
-                                    href="{{ route('universitas.create') }}">Create New Universitas</a>
+                                    href="{{ route('jurusan-program.create') }}">Create New Jurusan Program</a>
                                 <a class="btn btn-info btn-primary active search">
                                     <i class="fa fa-search" aria-hidden="true"></i>
-                                    Search Universitas</a>
+                                    Search Jurusan Program</a>
                                 <a class="btn btn-info btn-primary active filter">
                                     <i class="fa fa-filter" aria-hidden="true"></i>
-                                    Filter Universitas</a>
+                                    Filter Jurusan Program</a>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="show-filter mb-3" style="display: none">
-                                <form id="filter" method="GET" action="{{ route('universitas.index') }}"
+                                <form id="filter" method="GET" action="{{ route('jurusan-program.index') }}"
                                     class="d-flex flex-wrap align-items-end">
-                                    <div class="form-group mr-3">
-                                        <label for="TipeInstitusi">Tipe</label>
-                                        <select name="TipeInstitusi" class="form-control">
-                                            <option value="">Pilih Tipe Institusi</option>
-                                            <option value="Universitas"
-                                                {{ request('TipeInstitusi') == 'Universitas' ? 'selected' : '' }}>
-                                                Universitas</option>
-                                            <option value="Politeknik"
-                                                {{ request('TipeInstitusi') == 'Politeknik' ? 'selected' : '' }}>Politeknik
-                                            </option>
+                                    <div class="form-group col-md-4">
+                                        <label for="UniversitasID">Universitas</label>
+                                        <select name="UniversitasID" id="UniversitasID" class="form-control">
+                                            <option value=""selected>-- Select Universitas --</option>
+                                            @foreach ($universitas as $univ)
+                                                <option value="{{ $univ->id }}"
+                                                    {{ request('UniversitasID') == $univ->id ? 'selected' : '' }}>
+                                                    {{ $univ->NamaUniversitas }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group mr-3">
-                                        <label for="StatusUniversitas">Status</label>
-                                        <select name="StatusUniversitas" class="form-control">
-                                            <option value="">Pilih Status Universitas</option>
-                                            <option value="Active"
-                                                {{ request('StatusUniversitas') == 'Active' ? 'selected' : '' }}>Aktif
-                                            </option>
-                                            <option value="InActive"
-                                                {{ request('StatusUniversitas') == 'InActive' ? 'selected' : '' }}>Non Aktif
-                                            </option>
+
+                                    <!-- Fakultas dropdown only shown if UniversitasID is selected and its type is "Universitas" -->
+                                    <div class="form-group mr-3" id="fakultas-filter" style="display: none;">
+                                        <label for="FakultasID">Fakultas</label>
+                                        <select name="FakultasID" class="form-control">
+                                            <option value="">Pilih Fakultas</option>
+                                            @foreach ($fakultas as $fakultas)
+                                                <option value="{{ $fakultas->id }}"
+                                                    {{ request('FakultasID') == $fakultas->id ? 'selected' : '' }}>
+                                                    {{ $fakultas->NamaFakultas }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
+
                                     <div class="ml-auto">
                                         <button class="btn btn-primary mr-2" type="submit">Submit</button>
-                                        <a class="btn btn-secondary" href="{{ route('universitas.index') }}">Reset</a>
+                                        <a class="btn btn-secondary" href="{{ route('jurusan-program.index') }}">Reset</a>
                                     </div>
                                 </form>
                             </div>
+
                             <div class="show-search mb-3" style="display: none">
-                                <form id="search" method="GET" action="{{ route('universitas.index') }}">
+                                <form id="search" method="GET" action="{{ route('jurusan-program.index') }}">
                                     <div class="form-row">
                                         <div class="form-group col-md-4">
-                                            <label for="NamaUniversitas">Universitas</label>
-                                            <input type="text" name="NamaUniversitas" class="form-control"
-                                                id="NamaUniversitas" placeholder="Nama Universitas"
-                                                value="{{ request()->input('NamaUniversitas') }}">
+                                            <label for="NamaJurusanPrograms">Jurusan Program</label>
+                                            <input type="text" name="NamaJurusanPrograms" class="form-control"
+                                                id="NamaJurusanPrograms" placeholder="Nama Jurusan Program"
+                                                value="{{ request()->input('NamaJurusanPrograms') }}">
                                         </div>
                                     </div>
                                     <div class="text-right">
                                         <button class="btn btn-primary mr-1" type="submit">Submit</button>
-                                        <a class="btn btn-secondary" href="{{ route('universitas.index') }}">Reset</a>
+                                        <a class="btn btn-secondary" href="{{ route('jurusan-program.index') }}">Reset</a>
                                     </div>
                                 </form>
                             </div>
@@ -90,40 +94,43 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Nama</th>
-                                            <th>Kode</th>
-                                            <th>Alamat</th>
-                                            <th>No Telp</th>
-                                            <th>Email</th>
+                                            <th>Nama Jurusan</th>
+                                            <th>Kode Jurusan</th>
+                                            <th>Fakultas</th>
+                                            <th>Universitas</th>
                                             <th>Status</th>
                                             <th>Tipe</th>
                                             <th class="text-right">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($universitas as $key => $univ)
+                                        @foreach ($jurusanPrograms as $key => $jurusan)
                                             <tr>
-                                                <td>{{ ($universitas->currentPage() - 1) * $universitas->perPage() + $key + 1 }}
+                                                <td>{{ ($jurusanPrograms->currentPage() - 1) * $jurusanPrograms->perPage() + $key + 1 }}
                                                 </td>
-                                                <td>{{ $univ->NamaUniversitas }}</td>
-                                                <td>{{ $univ->KodeUniversitas }}</td>
-                                                <td>{{ $univ->AlamatUniversitas }}</td>
-                                                <td>{{ $univ->NoTelpUniversitas }}</td>
-                                                <td>{{ $univ->EmailUniversitas }}</td>
+                                                <td>{{ $jurusan->NamaJurusanPrograms }}</td>
+                                                <td>{{ $jurusan->KodeJurusanProgram }}</td>
+                                                <td>{{ $jurusan->Fakultas ?? '-' }}</td>
+                                                <td>{{ $jurusan->Universitas }}</td>
                                                 <td>
-                                                    @if ($univ->StatusUniversitas === 'Active')
-                                                        <span class="badge badge-success">Aktif</span>
-                                                    @elseif($univ->StatusUniversitas === 'InActive')
-                                                        <span class="badge badge-danger">Non Aktif</span>
+                                                    @if ($jurusan->StatusJurusanPrograms === 'Active')
+                                                        <span class="badge"
+                                                            style="background-color: #20d800; color: #ffffff;">Aktif</span>
+                                                    @elseif($jurusan->StatusJurusanPrograms === 'InActive')
+                                                        <span class="badge"
+                                                            style="background-color: #ff4d4f; color: #fff;">Non Aktif</span>
                                                     @else
-                                                        <span class="badge badge-secondary">Tidak Diketahui</span>
+                                                        <span class="badge"
+                                                            style="background-color: #d6d6d6; color: #6c757d;">Tidak
+                                                            Diketahui</span>
                                                     @endif
                                                 </td>
+
                                                 <td>
-                                                    @if ($univ->TipeInstitusi === 'Universitas')
+                                                    @if ($jurusan->TipeUniversitas === 'Universitas')
                                                         <span class="badge badge-info"
                                                             style="background-color: #17066e; color: #fff;">Universitas</span>
-                                                    @elseif($univ->TipeInstitusi === 'Politeknik')
+                                                    @elseif($jurusan->TipeUniversitas === 'Politeknik')
                                                         <span class="badge badge-warning"
                                                             style="background-color: #ff4d00; color: #fff;">Politeknik</span>
                                                     @else
@@ -134,11 +141,11 @@
                                                 </td>
                                                 <td class="text-right">
                                                     <div class="d-flex justify-content-end">
-                                                        <a href="{{ route('universitas.edit', $univ->id) }}"
+                                                        <a href="{{ route('jurusan-program.edit', $jurusan->id) }}"
                                                             class="btn btn-sm btn-info btn-icon "><i
                                                                 class="fas fa-edit"></i>
                                                             Edit</a>
-                                                        <form action="{{ route('universitas.destroy', $univ->id) }}"
+                                                        <form action="{{ route('jurusan-program.destroy', $jurusan->id) }}"
                                                             method="POST" class="ml-2">
                                                             @csrf
                                                             @method('DELETE')
@@ -152,7 +159,7 @@
                                     </tbody>
                                 </table>
                                 <div class="d-flex justify-content-center">
-                                    {{ $universitas->withQueryString()->links() }}
+                                    {{ $jurusanPrograms->withQueryString()->links() }}
                                 </div>
                             </div>
                         </div>
@@ -166,6 +173,7 @@
 @push('customScript')
     <script>
         $(document).ready(function() {
+            // Menangani klik pada search dan filter toggle
             $('.search').click(function(event) {
                 event.stopPropagation();
                 $(".show-search").slideToggle("fast");
@@ -176,6 +184,28 @@
                 $(".show-filter").slideToggle("fast");
                 $(".show-search").hide();
             });
+
+            // Fungsi untuk memeriksa tipe universitas dan menampilkan fakultas
+            $('#UniversitasID').change(function() {
+                var universitasID = $(this).val();
+
+                // Cek tipe universitas yang dipilih
+                $.get("/master-management/getUniversitasType/" + universitasID, function(data) {
+                    if (data && data.TipeInstitusi === 'Universitas') {
+                        // Jika tipe Universitas, tampilkan fakultas
+                        $('#fakultas-filter').show();
+                    } else {
+                        // Jika tipe Politeknik, sembunyikan fakultas
+                        $('#fakultas-filter').hide();
+                    }
+                });
+
+            });
+
+            // Jika Universitas sudah dipilih saat pertama kali halaman dibuka
+            if ($('#UniversitasID').val()) {
+                $('#UniversitasID').change();
+            }
 
             // Hapus parameter kosong sebelum submit form
             $('form').on('submit', function(e) {

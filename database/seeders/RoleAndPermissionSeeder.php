@@ -86,6 +86,12 @@ class RoleAndPermissionSeeder extends Seeder
         Permission::create(['name' => 'fakultas.edit']);
         Permission::create(['name' => 'fakultas.destroy']);
 
+        //jurusan-program
+        Permission::create(['name' => 'jurusan-program.index']);
+        Permission::create(['name' => 'jurusan-program.create']);
+        Permission::create(['name' => 'jurusan-program.edit']);
+        Permission::create(['name' => 'jurusan-program.destroy']);
+
         //Prodi
         Permission::create(['name' => 'program-studi.index']);
         Permission::create(['name' => 'program-studi.create']);

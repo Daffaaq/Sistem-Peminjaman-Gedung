@@ -27,6 +27,8 @@ class StoreUniversitasRequest extends FormRequest
             'AlamatUniversitas' => 'required|string|max:255',
             'NoTelpUniversitas' => 'required|string|max:255',
             'EmailUniversitas' => 'required|string|max:255',
+            'StatusUniversitas' => 'required|in:Active,InActive',
+            'TipeInstitusi' => 'required|in:Universitas,Politeknik'
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
 
 class UpdateProdiRequest extends FormRequest
 {
@@ -21,10 +22,27 @@ class UpdateProdiRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        // Ambil UniversitasID dari input
+        $universitasID = $this->input('UniversitasID');
+
+        // Cek tipe universitas
+        $universitasTipe = DB::table('muniversitas')->where('id', $universitasID)->value('TipeInstitusi');
+        $rules = [
             'NamaProdi' => 'required|string|max:255',
             'KodeProdi' => 'required|string|max:255',
-            'FakultasID' => 'required|exists:mfakultas,id'
+            'strata' => 'required|string|max:255',
+            'StatusProdi' => 'required|in:Active,InActive',
+            'UniversitasID' => 'required|exists:muniversitas,id',
+            'JurusanProgramID' => 'required|exists:mjurusanprograms,id',
         ];
+
+        // Cek tipe institusi dari request untuk menentukan validasi Fakultas dan JurusanProgram
+        if ($universitasTipe == 'Universitas') {
+            $rules['FakultasID'] = 'required|exists:mfakultas,id';
+        } elseif ($universitasTipe == 'Politeknik') {
+            $rules['FakultasID'] = 'nullable';
+        }
+
+        return $rules;
     }
 }

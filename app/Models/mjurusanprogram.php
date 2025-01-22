@@ -12,11 +12,20 @@ class mjurusanprogram extends Model
     protected $table = 'mjurusanprograms';
 
     protected $fillable = [
-        'NamaJurusan',
+        'NamaJurusanPrograms',
+        'KodeJurusanProgram',
+        'FakultasID',
+        'UniversitasID',
+        'StatusJurusanPrograms',
     ];
 
     public function fakultas()
     {
         return $this->belongsTo(mfakultas::class, 'FakultasID');
+    }
+
+    public function universitas()
+    {
+        return $this->belongsTo(muniversitas::class, 'UniversitasID');
     }
 }

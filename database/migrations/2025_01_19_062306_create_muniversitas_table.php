@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('AlamatUniversitas');
             $table->string('NoTelpUniversitas');
             $table->string('EmailUniversitas');
+            $table->enum('StatusUniversitas', ['Active', 'InActive']);
+            $table->enum('TipeInstitusi', ['Universitas', 'Politeknik']);
             $table->timestamps();
         });
     }

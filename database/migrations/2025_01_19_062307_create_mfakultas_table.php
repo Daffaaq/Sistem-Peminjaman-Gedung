@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('NamaFakultas');
             $table->string('KodeFakultas');
-            $table->unsignedBigInteger('UniversitasID');
+            $table->unsignedBigInteger('UniversitasID')->index();
+            $table->enum('StatusFakultas', ['Active', 'InActive']);
             $table->timestamps();
             
             $table->foreign('UniversitasID')->references('id')->on('muniversitas')->onDelete('cascade');

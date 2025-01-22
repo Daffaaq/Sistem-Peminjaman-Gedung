@@ -80,6 +80,7 @@
                                             <th>#</th>
                                             <th>Nama Fakultas</th>
                                             <th>Kode Fakultas</th>
+                                            <th>Status Fakultas</th>
                                             <th>Nama Universitas</th>
                                             <th class="text-right">Action</th>
                                         </tr>
@@ -91,6 +92,15 @@
                                                 </td>
                                                 <td>{{ $fak->NamaFakultas }}</td>
                                                 <td>{{ $fak->KodeFakultas }}</td>
+                                                <td>
+                                                    @if ($fak->StatusFakultas === 'Active')
+                                                        <span class="badge badge-success">Aktif</span>
+                                                    @elseif($fak->StatusFakultas === 'InActive')
+                                                        <span class="badge badge-danger">Non Aktif</span>
+                                                    @else
+                                                        <span class="badge badge-secondary">Tidak Diketahui</span>
+                                                    @endif
+                                                </td>
                                                 <td>{{ $fak->NamaUniversitas }}</td>
                                                 <td class="text-right">
                                                     <div class="d-flex justify-content-end">

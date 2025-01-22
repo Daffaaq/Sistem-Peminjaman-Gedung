@@ -14,10 +14,18 @@ class mprodi extends Model
     protected $fillable = [
         'NamaProdi',
         'KodeProdi',
+        'JurusanProgramID',
         'FakultasID',
+        'strata',
+        'StatusProdi',
     ];
 
-    public function fakultas()
+    public function JurusanPrograms()
+    {
+        return $this->belongsTo(mjurusanprogram::class, 'JurusanProgramID');
+    }
+
+    public function Fakultas()
     {
         return $this->belongsTo(mfakultas::class, 'FakultasID');
     }

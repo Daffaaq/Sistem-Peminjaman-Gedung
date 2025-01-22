@@ -37,6 +37,12 @@ class MenuItemSeeder extends Seeder
                     'menu_group_id' => 2,
                 ],
                 [
+                    'name' => 'Jurusan/Program',
+                    'route' => 'master-management/jurusan-program',
+                    'permission_name' => 'jurusan-program.index',
+                    'menu_group_id' => 2,
+                ],
+                [
                     'name' => 'Program Studi',
                     'route' => 'master-management/program-studi',
                     'permission_name' => 'program-studi.index',

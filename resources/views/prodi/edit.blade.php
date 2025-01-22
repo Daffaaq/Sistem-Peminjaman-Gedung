@@ -3,72 +3,81 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h1>Program Studi</h1>
+            <h1>Edit Program Studi</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
                 <div class="breadcrumb-item"><a href="#">Program Studi</a></div>
-                <div class="breadcrumb-item">Tambah Program Studi</div>
+                <div class="breadcrumb-item">Edit Program Studi</div>
             </div>
         </div>
         <div class="section-body">
-            <h2 class="section-title">Tambah Program Studi</h2>
+            <h2 class="section-title">Edit Program Studi</h2>
 
             <div class="card">
                 <div class="card-header">
-                    <h4>Validasi Tambah Data Program Studi</h4>
+                    <h4>Form Edit Data Program Studi</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('program-studi.store') }}" method="post">
+                    <form action="{{ route('program-studi.update', $prodi->id) }}" method="post">
                         @csrf
+                        @method('PUT')
 
                         <div class="form-group">
                             <label for="UniversitasID">Universitas</label>
                             <select class="form-control @error('UniversitasID') is-invalid @enderror" id="UniversitasID"
                                 name="UniversitasID">
                                 <option value="">Pilih Universitas</option>
-                                @foreach ($universitas as $uni)
-                                    <option value="{{ $uni->id }}" data-tipe="{{ $uni->TipeInstitusi }}">
-                                        {{ $uni->NamaUniversitas }}</option>
+                                @foreach ($universitasList as $uni)
+                                    <option value="{{ $uni->id }}" data-tipe="{{ $uni->TipeInstitusi }}"
+                                        {{ $jurusanProgram->UniversitasID == $uni->id ? 'selected' : '' }}>
+                                        {{ $uni->NamaUniversitas }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('UniversitasID')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-
-                        <div class="form-group">
+                        <!-- Dropdown Fakultas (hanya jika tipe institusi adalah Universitas) -->
+                        <div class="form-group" id="fakultasDropdown"
+                            style="display: {{ $universitas && $universitas->TipeInstitusi == 'Universitas' ? 'block' : 'none' }};">
                             <label for="FakultasID">Fakultas</label>
                             <select class="form-control @error('FakultasID') is-invalid @enderror" id="FakultasID"
                                 name="FakultasID">
                                 <option value="">Pilih Fakultas</option>
+                                @foreach ($fakultas as $fak)
+                                    <option value="{{ $fak->id }}"
+                                        {{ $jurusanProgram->FakultasID == $fak->id ? 'selected' : '' }}>
+                                        {{ $fak->NamaFakultas }}
+                                    </option>
+                                @endforeach
                             </select>
                             @error('FakultasID')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
+                        <!-- Dropdown Jurusan Program -->
                         <div class="form-group">
                             <label for="JurusanProgramID">Jurusan Program</label>
                             <select class="form-control @error('JurusanProgramID') is-invalid @enderror"
                                 id="JurusanProgramID" name="JurusanProgramID">
                                 <option value="">Pilih Jurusan Program</option>
+                                <option value="{{ $jurusanProgram->id }}" selected>
+                                    {{ $jurusanProgram->NamaJurusanPrograms }}
+                                </option>
                             </select>
                             @error('JurusanProgramID')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="NamaProdi">Nama Program Studi</label>
                             <input type="text" class="form-control @error('NamaProdi') is-invalid @enderror"
-                                id="NamaProdi" name="NamaProdi" placeholder="Enter Nama Program Studi">
+                                id="NamaProdi" name="NamaProdi" placeholder="Enter Nama Program Studi"
+                                value="{{ $prodi->NamaProdi }}">
                             @error('NamaProdi')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -79,17 +88,19 @@
                         <div class="form-group">
                             <label for="KodeProdi">Kode Program Studi</label>
                             <input type="text" class="form-control @error('KodeProdi') is-invalid @enderror"
-                                id="KodeProdi" name="KodeProdi" placeholder="Enter Kode Program Studi">
+                                id="KodeProdi" name="KodeProdi" placeholder="Enter Kode Program Studi"
+                                value="{{ $prodi->KodeProdi }}">
                             @error('KodeProdi')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
                         </div>
+
                         <div class="form-group">
                             <label for="strata">Strata Program Studi</label>
                             <input type="text" class="form-control @error('strata') is-invalid @enderror" id="strata"
-                                name="strata" placeholder="Enter Kode Program Studi">
+                                name="strata" placeholder="Enter Strata Program Studi" value="{{ $prodi->strata }}">
                             @error('strata')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -101,9 +112,11 @@
                             <label for="StatusProdi">Status Program Studi</label>
                             <select class="form-control @error('StatusProdi') is-invalid @enderror" id="StatusProdi"
                                 name="StatusProdi">
-                                <option value="" disabled selected>Pilih Status Jurusan Program</option>
-                                <option value="Active">Aktif</option>
-                                <option value="InActive">Non Aktif</option>
+                                <option value="" disabled>Pilih Status Jurusan Program</option>
+                                <option value="Active" {{ $prodi->StatusProdi == 'Active' ? 'selected' : '' }}>Aktif
+                                </option>
+                                <option value="InActive" {{ $prodi->StatusProdi == 'InActive' ? 'selected' : '' }}>Non
+                                    Aktif</option>
                             </select>
                             @error('StatusProdi')
                                 <div class="invalid-feedback">
@@ -113,7 +126,7 @@
                         </div>
                 </div>
                 <div class="card-footer text-right">
-                    <button class="btn btn-primary">Submit</button>
+                    <button class="btn btn-primary">Update</button>
                     <a class="btn btn-secondary" href="{{ route('program-studi.index') }}">Cancel</a>
                 </div>
                 </form>
@@ -125,10 +138,23 @@
 @push('customScript')
     <script>
         $(document).ready(function() {
+            // Update the Fakultas dropdown visibility based on Universitas tipe
+            function updateFakultasVisibility() {
+                const tipeInstitusi = $('#UniversitasID option:selected').data('tipe');
+                if (tipeInstitusi === 'Universitas') {
+                    $('#fakultasDropdown').show();
+                } else {
+                    $('#fakultasDropdown').hide();
+                }
+            }
+
+            // On page load, set Fakultas dropdown visibility
+            updateFakultasVisibility();
+
             $('#UniversitasID').change(function() {
+                updateFakultasVisibility();
                 const universitasID = $(this).val();
-                const tipeInstitusi = $('#UniversitasID option:selected').data(
-                    'tipe');
+                const tipeInstitusi = $('#UniversitasID option:selected').data('tipe');
                 const fakultasDropdown = $('#FakultasID');
                 const jurusanDropdown = $('#JurusanProgramID');
 
@@ -146,10 +172,8 @@
                                 UniversitasID: universitasID
                             },
                             success: function(response) {
-                                console.log(
-                                    response); // Pastikan response memiliki data yang benar
                                 fakultasDropdown.empty();
-                                if (response.length > 0) { // response adalah array langsung
+                                if (response.length > 0) {
                                     fakultasDropdown.append(
                                         '<option value="" disabled selected>-- Pilih Fakultas --</option>'
                                     );
@@ -159,7 +183,6 @@
                                         );
                                     });
 
-                                    // Ketika Fakultas dipilih
                                     fakultasDropdown.change(function() {
                                         const fakultasID = $(this).val();
                                         jurusanDropdown.empty();
@@ -207,7 +230,6 @@
                                 }
                             },
                             error: function(xhr) {
-                                console.error(xhr.responseText); // Debug jika ada error
                                 fakultasDropdown.empty();
                                 fakultasDropdown.append(
                                     '<option value="" disabled>Error memuat data fakultas</option>'

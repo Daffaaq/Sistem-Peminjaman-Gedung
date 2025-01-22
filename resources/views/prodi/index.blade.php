@@ -25,8 +25,9 @@
                         <div class="card-header">
                             <h4>Prodi List</h4>
                             <div class="card-header-action">
-                                <a class="btn btn-icon icon-left btn-primary" href="{{ route('program-studi.create') }}">Create
-                                    New Fakultas</a>
+                                <a class="btn btn-icon icon-left btn-primary"
+                                    href="{{ route('program-studi.create') }}">Create
+                                    New Prodi</a>
                                 <a class="btn btn-info btn-primary active search">
                                     <i class="fa fa-search" aria-hidden="true"></i>
                                     Search Prodi</a>
@@ -42,9 +43,10 @@
                                         <div class="form-group col-md-4">
                                             <label for="UniversitasID">Universitas</label>
                                             <select name="UniversitasID" id="UniversitasID" class="form-control">
-                                                <option value="" disabled selected>-- Select Universitas --</option>
+                                                <option value="" selected>-- Select Universitas --</option>
                                                 @foreach ($universitas as $univ)
-                                                    <option value="{{ $univ->id }}">{{ $univ->NamaUniversitas }}
+                                                    <option value="{{ $univ->id }}"
+                                                        data-tipe="{{ $univ->TipeInstitusi }}">{{ $univ->NamaUniversitas }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -53,6 +55,13 @@
                                             <label for="FakultasID">Fakultas</label>
                                             <select name="FakultasID" id="FakultasID" class="form-control">
                                                 <option value="" disabled selected>-- Select Fakultas --</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="JurusanProgramID">Jurusan/Program</label>
+                                            <select name="JurusanProgramID" id="JurusanProgramID" class="form-control">
+                                                <option value="" disabled selected>-- Select Jurusan/Program --
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
@@ -85,7 +94,10 @@
                                             <th>Nama Prodi</th>
                                             <th>Kode Prodi</th>
                                             <th>Nama Fakultas</th>
+                                            <th>Nama Jurusan/Program</th>
                                             <th>Nama Universitas</th>
+                                            <th>Status Prodi</th>
+                                            <th class="text-right">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -94,8 +106,38 @@
                                                 <td>{{ ($prodi->currentPage() - 1) * $prodi->perPage() + $key + 1 }}</td>
                                                 <td>{{ $item->NamaProdi }}</td>
                                                 <td>{{ $item->KodeProdi }}</td>
-                                                <td>{{ $item->NamaFakultas }}</td>
-                                                <td>{{ $item->NamaUniversitas }}</td>
+                                                <td>{{ $item->NamaFakultas ?? '-' }}</td>
+                                                <td>{{ $item->NamaJurusanPrograms }}</td>
+                                                <td>{{ $item->NamaUniversitasFakultas ?? $item->NamaUniversitasJurusan }}
+                                                </td>
+                                                <td>
+                                                    @if ($item->StatusProdi === 'Active')
+                                                        <span class="badge"
+                                                            style="background-color: #20d800; color: #ffffff;">Aktif</span>
+                                                    @elseif($item->StatusProdi === 'InActive')
+                                                        <span class="badge"
+                                                            style="background-color: #ff4d4f; color: #fff;">Non Aktif</span>
+                                                    @else
+                                                        <span class="badge"
+                                                            style="background-color: #d6d6d6; color: #6c757d;">Tidak
+                                                            Diketahui</span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-right">
+                                                    <div class="d-flex justify-content-end">
+                                                        <a href="{{ route('program-studi.edit', $item->id) }}"
+                                                            class="btn btn-sm btn-info btn-icon "><i
+                                                                class="fas fa-edit"></i>
+                                                            Edit</a>
+                                                        <form action="{{ route('program-studi.destroy', $item->id) }}"
+                                                            method="POST" class="ml-2">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="btn btn-sm btn-danger btn-icon confirm-delete">
+                                                                <i class="fas fa-times"></i> Delete </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
@@ -133,45 +175,93 @@
     </script>
     <script>
         $(document).ready(function() {
+            // Ketika Universitas dipilih
             $('#UniversitasID').change(function() {
                 const universitasID = $(this).val(); // Ambil ID universitas yang dipilih
                 const fakultasDropdown = $('#FakultasID');
+                const jurusanProgramDropdown = $('#JurusanProgramID');
+                const tipeInstitusi = $('#UniversitasID option:selected').data(
+                    'tipe'); // Ambil tipe institusi
+
+                // Bersihkan dropdown Fakultas dan Jurusan/Program
+                fakultasDropdown.empty();
+                jurusanProgramDropdown.empty();
 
                 if (universitasID) {
-                    // Bersihkan dropdown fakultas
-                    fakultasDropdown.empty();
-                    fakultasDropdown.append('<option value="" disabled selected>Loading...</option>');
+                    if (tipeInstitusi === 'Universitas') {
+                        // Tampilkan dropdown Fakultas untuk Universitas
+                        fakultasDropdown.append('<option value="" selected>Loading...</option>');
 
-                    // AJAX Request
+                        // AJAX Request untuk Fakultas
+                        $.ajax({
+                            url: "{{ route('getFakultas') }}", // URL endpoint
+                            type: "GET",
+                            data: {
+                                UniversitasID: universitasID
+                            },
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+                                fakultasDropdown.empty();
+                                fakultasDropdown.append(
+                                    '<option value="" disabled selected>-- Select Fakultas --</option>'
+                                );
+                                if (response.length > 0) {
+                                    response.forEach(function(fakultas) {
+                                        fakultasDropdown.append(
+                                            `<option value="${fakultas.id}">${fakultas.NamaFakultas}</option>`
+                                        );
+                                    });
+                                } else {
+                                    fakultasDropdown.append(
+                                        '<option value="" disabled>No Fakultas Found</option>'
+                                    );
+                                }
+                            },
+                            error: function() {
+                                fakultasDropdown.empty();
+                                fakultasDropdown.append(
+                                    '<option value="" disabled selected>Error loading data</option>'
+                                );
+                            },
+                        });
+                    }
+
+                    // Tampilkan dropdown Jurusan/Program tanpa Fakultas untuk Politeknik
+                    jurusanProgramDropdown.empty();
+                    jurusanProgramDropdown.append('<option value="" disabled selected>Loading...</option>');
+
                     $.ajax({
-                        url: "{{ route('getFakultas') }}", // URL endpoint
+                        url: "{{ route('getJurusanProgram') }}", // URL endpoint
                         type: "GET",
                         data: {
-                            UniversitasID: universitasID
+                            UniversitasID: universitasID,
+                            TipeInstitusi: tipeInstitusi
                         },
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(response) {
-                            fakultasDropdown.empty();
-                            fakultasDropdown.append(
-                                '<option value="" disabled selected>-- Select Fakultas --</option>'
+                            jurusanProgramDropdown.empty();
+                            jurusanProgramDropdown.append(
+                                '<option value="" disabled selected>-- Select Jurusan/Program --</option>'
                             );
-
                             if (response.length > 0) {
-                                response.forEach(function(fakultas) {
-                                    fakultasDropdown.append(
-                                        `<option value="${fakultas.id}">${fakultas.NamaFakultas}</option>`
+                                response.forEach(function(jurusanProgram) {
+                                    jurusanProgramDropdown.append(
+                                        `<option value="${jurusanProgram.id}">${jurusanProgram.NamaJurusanPrograms}</option>`
                                     );
                                 });
                             } else {
-                                fakultasDropdown.append(
-                                    '<option value="" disabled>No Fakultas Found</option>');
+                                jurusanProgramDropdown.append(
+                                    '<option value="" disabled>No Jurusan/Program Found</option>'
+                                );
                             }
                         },
                         error: function() {
-                            fakultasDropdown.empty();
-                            fakultasDropdown.append(
+                            jurusanProgramDropdown.empty();
+                            jurusanProgramDropdown.append(
                                 '<option value="" disabled selected>Error loading data</option>'
                             );
                         },
@@ -180,6 +270,66 @@
                     fakultasDropdown.empty();
                     fakultasDropdown.append(
                         '<option value="" disabled selected>-- Select Fakultas --</option>');
+                    jurusanProgramDropdown.empty();
+                    jurusanProgramDropdown.append(
+                        '<option value="" disabled selected>-- Select Jurusan/Program --</option>');
+                }
+            });
+
+            // Ketika Fakultas dipilih
+            $('#FakultasID').change(function() {
+                const universitasID = $('#UniversitasID').val();
+                const fakultasID = $(this).val();
+                const jurusanProgramDropdown = $('#JurusanProgramID');
+                const tipeInstitusi = $('#UniversitasID option:selected').data(
+                    'tipe'); // Ambil tipe institusi
+
+                // Bersihkan dropdown Jurusan/Program
+                jurusanProgramDropdown.empty();
+                jurusanProgramDropdown.append('<option value="" disabled selected>Loading...</option>');
+
+                if (universitasID && fakultasID) {
+                    let data = {
+                        UniversitasID: universitasID,
+                        FakultasID: fakultasID,
+                        TipeInstitusi: tipeInstitusi
+                    };
+
+                    $.ajax({
+                        url: "{{ route('getJurusanProgram') }}", // URL endpoint
+                        type: "GET",
+                        data: data, // Kirim data yang sesuai
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            jurusanProgramDropdown.empty();
+                            jurusanProgramDropdown.append(
+                                '<option value="" disabled selected>-- Select Jurusan/Program --</option>'
+                            );
+                            if (response.length > 0) {
+                                response.forEach(function(jurusanProgram) {
+                                    jurusanProgramDropdown.append(
+                                        `<option value="${jurusanProgram.id}">${jurusanProgram.NamaJurusanPrograms}</option>`
+                                    );
+                                });
+                            } else {
+                                jurusanProgramDropdown.append(
+                                    '<option value="" disabled>No Jurusan/Program Found</option>'
+                                );
+                            }
+                        },
+                        error: function() {
+                            jurusanProgramDropdown.empty();
+                            jurusanProgramDropdown.append(
+                                '<option value="" disabled selected>Error loading data</option>'
+                            );
+                        },
+                    });
+                } else {
+                    jurusanProgramDropdown.empty();
+                    jurusanProgramDropdown.append(
+                        '<option value="" disabled selected>-- Select Jurusan/Program --</option>');
                 }
             });
         });

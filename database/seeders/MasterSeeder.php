@@ -13,66 +13,79 @@ class MasterSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Universitas
+        // Universitas
         $universitasId = DB::table('muniversitas')->insertGetId([
-            'NamaUniversitas' => 'Universitas Negeri Malang',
-            'KodeUniversitas' => 'UM',
-            'AlamatUniversitas' => 'Jl. Raya Tlogomas No. 246, Malang',
+            'NamaUniversitas' => 'Universitas Brawijaya',
+            'KodeUniversitas' => 'UB',
+            'AlamatUniversitas' => 'Jl. Veteran No. 246, Malang',
             'NoTelpUniversitas' => '0341-123456',
-            'EmailUniversitas' => 'info@um.ac.id',
+            'EmailUniversitas' => 'info@ub.ac.id',
+            'StatusUniversitas' => 'Active',
+            'TipeInstitusi' => 'Universitas',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        // Create Fakultas
         $fakultasId = DB::table('mfakultas')->insertGetId([
-            'NamaFakultas' => 'Fakultas Ilmu Komputer',
-            'KodeFakultas' => 'FIK',
+            'NamaFakultas' => 'Fakultas Teknik',
+            'KodeFakultas' => 'FT',
             'UniversitasID' => $universitasId,
+            'StatusFakultas' => 'Active',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        $fakultasId1 = DB::table('mfakultas')->insertGetId([
-            'NamaFakultas' => 'Fakultas Ilmu Administrasi',
-            'KodeFakultas' => 'FIA',
+
+        $jurusanId = DB::table('mjurusanprograms')->insertGetId([
+            'NamaJurusanPrograms' => 'Departemen Teknik Kimia',
+            'KodeJurusanProgram' => 'DTK',
+            'FakultasID' => $fakultasId,
             'UniversitasID' => $universitasId,
+            'StatusJurusanPrograms' => 'Active',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        // Create Prodi
-        $prodiId = DB::table('mprodis')->insertGetId([
-            'NamaProdi' => 'Teknik Informatika',
-            'KodeProdi' => 'TI',
+        DB::table('mprodis')->insert([
+            'NamaProdi' => 'Teknik Kimia',
+            'KodeProdi' => 'TEKKIM',
+            'strata' => 'S1',
+            'JurusanProgramID' => $jurusanId,
             'FakultasID' => $fakultasId,
+            'StatusProdi' => 'Active',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        // Create Gedung
-        $gedungId = DB::table('mgedungs')->insertGetId([
-            'NamaGedung' => 'Gedung A',
-            'KodeGedung' => 'GA',
-            'JumlahLantaiGedung' => 5,
-            'kapasitasGedung' => 500,
-            'FakultasID' => $fakultasId,
-            'StatusGedung' => 'Active',
-            'TipeGedung' => 'Fakultas',
-            'Keterangan' => 'Gedung utama Fakultas Ilmu Komputer',
-            'statusGedungMandiri' => 'available',
+        // Politeknik
+        $politeknikId = DB::table('muniversitas')->insertGetId([
+            'NamaUniversitas' => 'Politeknik Negeri Malang',
+            'KodeUniversitas' => 'Polinema',
+            'AlamatUniversitas' => 'Jl. Soekarno Hatta No. 246, Malang',
+            'NoTelpUniversitas' => '0341-123458',
+            'EmailUniversitas' => 'info@polinema.ac.id',
+            'StatusUniversitas' => 'Active',
+            'TipeInstitusi' => 'Politeknik',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        // Create Ruangan
-        DB::table('mruangans')->insert([
-            'NamaRuang' => 'Ruang 101',
-            'KodeRuang' => 'R101',
-            'KapasitasRuang' => 50,
-            'GedungID' => $gedungId,
-            'StatusRuang' => 'Active',
-            'StatusBooked' => 'available',
-            'Keterangan' => 'Ruang kuliah untuk kelas besar',
+        $jurusanPoliteknikId = DB::table('mjurusanprograms')->insertGetId([
+            'NamaJurusanPrograms' => 'Teknologi Informasi',
+            'KodeJurusanProgram' => 'TI',
+            'FakultasID' => null, // Politeknik tidak memiliki fakultas
+            'UniversitasID' => $politeknikId,
+            'StatusJurusanPrograms' => 'Active',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('mprodis')->insert([
+            'NamaProdi' => 'Sistem Informasi Bisnis',
+            'KodeProdi' => 'SIB',
+            'strata' => 'D4',
+            'JurusanProgramID' => $jurusanPoliteknikId,
+            'FakultasID' => null,
+            'StatusProdi' => 'Active',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
