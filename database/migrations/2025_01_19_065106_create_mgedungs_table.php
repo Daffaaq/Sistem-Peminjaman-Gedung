@@ -19,14 +19,16 @@ return new class extends Migration
             $table->integer('kapasitasGedung')->nullable();
             $table->unsignedBigInteger('FakultasID')->nullable()->index();
             $table->unsignedBigInteger('JurusanProgramID')->nullable()->index();
+            $table->unsignedBigInteger('UniversitasID')->nullable()->index();
             $table->enum('StatusGedung', ['Active', 'InActive']);
             $table->enum('TipeGedung', ['Mandiri', 'Fakultas']);
             $table->text('Keterangan')->nullable();
-            $table->enum('statusGedungMandiri', ['booked', 'available'])->nullable();
+            $table->enum('statusGedungMandiri', ['Booked', 'Available'])->nullable();
             $table->timestamps();
 
             $table->foreign('FakultasID')->references('id')->on('mfakultas')->onDelete('cascade');
             $table->foreign('JurusanProgramID')->references('id')->on('mjurusanprograms')->onDelete('cascade');
+            $table->foreign('UniversitasID')->references('id')->on('muniversitas')->onDelete('cascade');
         });
     }
 

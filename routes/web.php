@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\FakultasController;
+use App\Http\Controllers\GedungController;
 use App\Http\Controllers\JurusanProgramController;
 use App\Http\Controllers\Menu\MenuGroupController;
 use App\Http\Controllers\Menu\MenuItemController;
@@ -56,6 +57,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::resource('program-studi', ProdiController::class);
         Route::get('/getFakultas', [ProdiController::class, 'getFakultasByUniversitas'])->name('getFakultas');
         Route::get('/getJurusanPrograms', [ProdiController::class, 'getJurusanProgramsByUniversitas'])->name('getJurusanProgram');
+
+        //gedung 
+        Route::resource('gedung', GedungController::class);
     });
 
     //user list
