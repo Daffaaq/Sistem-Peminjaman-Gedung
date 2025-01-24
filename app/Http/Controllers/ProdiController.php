@@ -122,6 +122,7 @@ class ProdiController extends Controller
             'StatusProdi' => $request->StatusProdi,
             'JurusanProgramID' => $request->JurusanProgramID,
             'FakultasID' => $request->FakultasID ?? null,
+            'created_at' => now()
         ]);
         return redirect()->route('program-studi.index')->with('success', 'Data Program Studi berhasil ditambahkan!');
     }
@@ -201,6 +202,7 @@ class ProdiController extends Controller
             'StatusProdi' => $request->StatusProdi,
             'JurusanProgramID' => $request->JurusanProgramID,
             'FakultasID' => $request->FakultasID ?? null,
+            'updated_at' => now()
         ]);
 
         return redirect()->route('program-studi.index')->with('success', 'Data Program Studi berhasil diperbarui!');

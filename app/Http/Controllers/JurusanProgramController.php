@@ -67,6 +67,7 @@ class JurusanProgramController extends Controller
             'FakultasID' => $request->FakultasID ?? null,
             'UniversitasID' => $request->UniversitasID,
             'StatusJurusanPrograms' => $request->StatusJurusanPrograms,
+            'created_at' => now()
         ]);
 
         // Redirect dengan pesan sukses

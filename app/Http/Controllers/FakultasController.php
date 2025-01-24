@@ -55,7 +55,11 @@ class FakultasController extends Controller
      */
     public function store(StoreFakultasRequest $request)
     {
-        DB::table('mfakultas')->insert($request->validated());
+        DB::table('mfakultas')->insert(
+            array_merge($request->validated(), [
+                'created_at' => now(), // Menambahkan nilai created_at
+            ])
+        );
         return redirect()->route('fakultas.index')->with('success', 'Data fakultas berhasil ditambahkan!');
     }
 
@@ -92,7 +96,10 @@ class FakultasController extends Controller
         // Validasi data dan update fakultas menggunakan DB
         $updated = DB::table('mfakultas')
             ->where('id', $id)
-            ->update($request->validated());
+            ->update(array_merge(
+                $request->validated(),
+                ['updated_at' => now()] // Tambahkan kolom updated_at
+            ));
 
         return redirect()->route('fakultas.index')->with('success', 'Data Fakultas berhasil diperbarui!');
     }

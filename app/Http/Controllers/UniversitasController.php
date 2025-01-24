@@ -58,7 +58,8 @@ class UniversitasController extends Controller
             'NoTelpUniversitas' => $request->NoTelpUniversitas,
             'EmailUniversitas' => $request->EmailUniversitas,
             'StatusUniversitas' => $request->StatusUniversitas,
-            'TipeInstitusi' => $request->TipeInstitusi
+            'TipeInstitusi' => $request->TipeInstitusi,
+            'created_at' => now()
         ]);
 
         return redirect()->route('universitas.index')->with('success', 'Data berhasil disimpan');
@@ -93,7 +94,8 @@ class UniversitasController extends Controller
             'NoTelpUniversitas' => $request->NoTelpUniversitas,
             'EmailUniversitas' => $request->EmailUniversitas,
             'StatusUniversitas' => $request->StatusUniversitas,
-            'TipeInstitusi' => $request->TipeInstitusi
+            'TipeInstitusi' => $request->TipeInstitusi,
+            'updated_at' => now()
         ]);
 
         return redirect()->route('universitas.index')->with('success', 'Data berhasil diupdate');
