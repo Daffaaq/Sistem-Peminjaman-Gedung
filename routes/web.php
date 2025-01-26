@@ -15,6 +15,7 @@ use App\Http\Controllers\RoleAndPermission\ImportPermissionController;
 use App\Http\Controllers\RoleAndPermission\ImportRoleController;
 use App\Http\Controllers\RoleAndPermission\PermissionController;
 use App\Http\Controllers\RoleAndPermission\RoleController;
+use App\Http\Controllers\RuangController;
 use App\Http\Controllers\UniversitasController;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
@@ -60,6 +61,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         //gedung 
         Route::resource('gedung', GedungController::class);
+
+        //ruang
+        Route::resource('ruang', RuangController::class);
+        Route::get('/getGedung', [RuangController::class, 'getGedung'])->name('getGedung');
     });
 
     //user list

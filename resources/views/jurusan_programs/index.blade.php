@@ -53,7 +53,7 @@
                                     </div>
 
                                     <!-- Fakultas dropdown only shown if UniversitasID is selected and its type is "Universitas" -->
-                                    <div class="form-group mr-3" id="fakultas-filter" style="display: none;">
+                                    {{-- <div class="form-group mr-3" id="fakultas-filter" style="display: none;">
                                         <label for="FakultasID">Fakultas</label>
                                         <select name="FakultasID" class="form-control">
                                             <option value="">Pilih Fakultas</option>
@@ -64,7 +64,14 @@
                                                 </option>
                                             @endforeach
                                         </select>
+                                    </div> --}}
+                                    <div class="form-group mr-3" id="fakultas-filter" style="display: none;">
+                                        <label for="FakultasID">Fakultas</label>
+                                        <select name="FakultasID" id="FakultasID" class="form-control">
+                                            <option value="">Pilih Fakultas</option>
+                                        </select>
                                     </div>
+
 
                                     <div class="ml-auto">
                                         <button class="btn btn-primary mr-2" type="submit">Submit</button>
@@ -173,45 +180,91 @@
 @push('customScript')
     <script>
         $(document).ready(function() {
-            // Menangani klik pada search dan filter toggle
+            // Toggle search and filter sections
             $('.search').click(function(event) {
                 event.stopPropagation();
                 $(".show-search").slideToggle("fast");
                 $(".show-filter").hide();
             });
+
             $('.filter').click(function(event) {
                 event.stopPropagation();
                 $(".show-filter").slideToggle("fast");
                 $(".show-search").hide();
             });
 
-            // Fungsi untuk memeriksa tipe universitas dan menampilkan fakultas
+            // Handle UniversitasID change
             $('#UniversitasID').change(function() {
-                var universitasID = $(this).val();
+                var universitasID = $(this).val(); // Get selected UniversitasID
+                var fakultasDropdown = $('#FakultasID'); // Fakultas dropdown
+                var fakultasFilter = $('#fakultas-filter'); // Fakultas filter wrapper
 
-                // Cek tipe universitas yang dipilih
-                $.get("/master-management/getUniversitasType/" + universitasID, function(data) {
-                    if (data && data.TipeInstitusi === 'Universitas') {
-                        // Jika tipe Universitas, tampilkan fakultas
-                        $('#fakultas-filter').show();
-                    } else {
-                        // Jika tipe Politeknik, sembunyikan fakultas
-                        $('#fakultas-filter').hide();
-                    }
-                });
+                // Reset Fakultas dropdown
+                fakultasDropdown.empty();
+                fakultasDropdown.append('<option value="" selected>Loading...</option>');
 
+                if (universitasID) {
+                    // Check TipeInstitusi of selected Universitas
+                    $.get("/master-management/getUniversitasType/" + universitasID, function(data) {
+                        if (data && data.TipeInstitusi === 'Universitas') {
+                            // If Universitas, show Fakultas filter
+                            fakultasFilter.show();
+
+                            // Fetch Fakultas based on UniversitasID
+                            $.ajax({
+                                url: "{{ route('getFakultas') }}",
+                                type: "GET",
+                                data: {
+                                    UniversitasID: universitasID
+                                },
+                                success: function(response) {
+                                    fakultasDropdown.empty();
+                                    if (response.length > 0) {
+                                        fakultasDropdown.append(
+                                            '<option value="" selected>Pilih Fakultas</option>'
+                                            );
+                                        response.forEach(function(fakultas) {
+                                            fakultasDropdown.append(
+                                                `<option value="${fakultas.id}">${fakultas.NamaFakultas}</option>`
+                                            );
+                                        });
+                                    } else {
+                                        fakultasDropdown.append(
+                                            '<option value="">Tidak ada fakultas tersedia</option>'
+                                            );
+                                    }
+                                },
+                                error: function(xhr) {
+                                    console.error(xhr.responseText);
+                                    fakultasDropdown.empty();
+                                    fakultasDropdown.append(
+                                        '<option value="">Error memuat data fakultas</option>'
+                                        );
+                                }
+                            });
+                        } else {
+                            // If Politeknik or others, hide Fakultas filter
+                            fakultasFilter.hide();
+                        }
+                    });
+                } else {
+                    // If UniversitasID is not selected, hide Fakultas filter
+                    fakultasFilter.hide();
+                    fakultasDropdown.empty();
+                    fakultasDropdown.append('<option value="">Pilih Universitas terlebih dahulu</option>');
+                }
             });
 
-            // Jika Universitas sudah dipilih saat pertama kali halaman dibuka
+            // Trigger change if UniversitasID is preselected
             if ($('#UniversitasID').val()) {
                 $('#UniversitasID').change();
             }
 
-            // Hapus parameter kosong sebelum submit form
+            // Remove empty parameters before submitting the form
             $('form').on('submit', function(e) {
                 $(this).find('select, input').each(function() {
                     if (!$(this).val()) {
-                        $(this).prop('disabled', true); // Disable parameter kosong
+                        $(this).prop('disabled', true);
                     }
                 });
             });

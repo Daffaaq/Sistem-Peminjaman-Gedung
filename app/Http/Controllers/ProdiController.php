@@ -47,7 +47,7 @@ class ProdiController extends Controller
                 });
             })
             ->paginate(10);
-            
+
         $universitas = DB::table('muniversitas')->select('id', 'NamaUniversitas', 'TipeInstitusi')->get();
 
         return view('prodi.index', compact('prodi', 'universitas'));
@@ -78,19 +78,23 @@ class ProdiController extends Controller
         $tipeInstitusi = $request->input('TipeInstitusi');
 
         Log::info("UniversitasID: $universitasID, FakultasID: $fakultasID, TipeInstitusi: $tipeInstitusi");
+
         $query = DB::table('mjurusanprograms')
             ->select('id', 'NamaJurusanPrograms');
 
-        // Jika Tipe Institusi adalah Universitas, maka filter berdasarkan Fakultas
+        // Jika Tipe Institusi adalah Universitas
         if ($tipeInstitusi == 'Universitas') {
+            // Filter berdasarkan Fakultas jika ada FakultasID
             if ($fakultasID) {
-                // Filter berdasarkan Fakultas jika Universitas
                 $query->where('FakultasID', $fakultasID);
             }
+            // Pastikan tetap ada filter berdasarkan UniversitasID
+            $query->where('UniversitasID', $universitasID);
         }
-        // Jika Tipe Institusi adalah Politeknik, tampilkan semua jurusan tanpa filter fakultas
+        // Jika Tipe Institusi adalah Politeknik
         elseif ($tipeInstitusi == 'Politeknik') {
-            $query->where('UniversitasID', $universitasID); // Tidak perlu filter berdasarkan Fakultas
+            // Filter berdasarkan UniversitasID, tanpa perlu filter FakultasID
+            $query->where('UniversitasID', $universitasID);
         }
 
         $jurusanProgram = $query->get();
@@ -98,7 +102,6 @@ class ProdiController extends Controller
         Log::info('Jurusan Program data:', $jurusanProgram->toArray());
         return response()->json($jurusanProgram);
     }
-
 
     /**
      * Show the form for creating a new resource.

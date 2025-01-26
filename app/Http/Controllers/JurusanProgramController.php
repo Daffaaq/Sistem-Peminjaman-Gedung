@@ -39,7 +39,7 @@ class JurusanProgramController extends Controller
             ->paginate(10);
         // dd($jurusanPrograms);
         $universitas = DB::table('muniversitas')->select('id', 'NamaUniversitas')->get();
-        $fakultas = DB::table('mfakultas')->select('id', 'NamaFakultas')->get();
+        $fakultas = DB::table('mfakultas')->select('id', 'NamaFakultas')->where('UniversitasID')->get();
 
         return view('jurusan_programs.index', compact('jurusanPrograms', 'universitas', 'fakultas'));
     }
@@ -92,7 +92,14 @@ class JurusanProgramController extends Controller
 
         // Ambil semua universitas dan fakultas untuk dropdown
         $universitas = DB::table('muniversitas')->select('id', 'NamaUniversitas')->get();
-        $fakultas = DB::table('mfakultas')->select('id', 'NamaFakultas')->get();
+        // Jika UniversitasID terisi, ambil fakultas terkait
+        $fakultas = [];
+        if ($jurusanProgram->UniversitasID) {
+            $fakultas = DB::table('mfakultas')
+                ->where('UniversitasID', $jurusanProgram->UniversitasID)
+                ->select('id', 'NamaFakultas')
+                ->get();
+        }
 
         // Kirim data ke view 'jurusan_programs.edit'
         return view('jurusan_programs.edit', compact('jurusanProgram', 'universitas', 'fakultas'));

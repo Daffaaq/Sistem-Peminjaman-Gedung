@@ -41,12 +41,22 @@ class StoreGedungRequest extends FormRequest
             $rules['kapasitasGedung'] = 'required|numeric|min:0';
             $rules['FakultasID'] = 'nullable|exists:mfakultas,id';
             $rules['JurusanProgramID'] = 'nullable|exists:mjurusanprograms,id';
-        } elseif ($this->input('TipeGedung') === 'Fakultas' && $this->isUniversitas()) {
-            $rules['JumlahLantaiGedung'] = 'required|numeric|min:1';
-            $rules['kapasitasGedung'] = 'nullable|numeric|min:0';
-            $rules['FakultasID'] = 'required|exists:mfakultas,id';
-            $rules['JurusanProgramID'] = 'required|exists:mjurusanprograms,id';
+        } elseif ($this->input('TipeGedung') === 'Fakultas') {
+            if ($this->isUniversitas()) {
+                // Jika TipeInstitusi adalah Universitas
+                $rules['JumlahLantaiGedung'] = 'required|numeric|min:1';
+                $rules['kapasitasGedung'] = 'nullable|numeric|min:0';
+                $rules['FakultasID'] = 'required|exists:mfakultas,id';
+                $rules['JurusanProgramID'] = 'nullable|exists:mjurusanprograms,id';
+            } elseif ($this->isPoliteknik()) {
+                // Jika TipeInstitusi adalah Politeknik
+                $rules['JumlahLantaiGedung'] = 'required|numeric|min:1';
+                $rules['kapasitasGedung'] = 'nullable|numeric|min:0';
+                $rules['JurusanProgramID'] = 'required|exists:mjurusanprograms,id';
+                $rules['FakultasID'] = 'nullable|exists:mfakultas,id';
+            }
         }
+
 
         // // Validasi FakultasID berdasarkan tipe Universitas
         // if ($this->isUniversitas()) {
@@ -91,6 +101,20 @@ class StoreGedungRequest extends FormRequest
             $this->isUniversitas = DB::table('muniversitas')
                 ->where('id', $this->input('UniversitasID'))
                 ->value('TipeInstitusi') === 'Universitas';
+        }
+        return $this->isUniversitas;
+    }
+
+    /**
+     *  Check if the UniversitasID refers to a Politeknik
+     */
+
+    private function isPoliteknik(): bool
+    {
+        if ($this->isUniversitas === null) {
+            $this->isUniversitas = DB::table('muniversitas')
+                ->where('id', $this->input('UniversitasID'))
+                ->value('TipeInstitusi') === 'Politeknik';
         }
         return $this->isUniversitas;
     }

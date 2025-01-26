@@ -14,6 +14,15 @@
             <h2 class="section-title">Tambah Program Studi</h2>
 
             <div class="card">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="card-header">
                     <h4>Validasi Tambah Data Program Studi</h4>
                 </div>
@@ -42,7 +51,8 @@
                                 <option value="">Pilih Universitas</option>
                                 @foreach ($universitas as $uni)
                                     <option value="{{ $uni->id }}" data-tipe="{{ $uni->TipeInstitusi }}">
-                                        {{ $uni->NamaUniversitas }}</option>
+                                        {{ $uni->NamaUniversitas }} - {{ $uni->TipeInstitusi }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('UniversitasID')
@@ -72,6 +82,8 @@
                                 id="JurusanProgramID" name="JurusanProgramID">
                                 <option value="">Pilih Jurusan Program</option>
                             </select>
+                            <small>Jika Tipe Universitas adalah Universitas, maka Jurusan Program opsional boleh diisi wajib
+                                atau tidak</small>
                             @error('JurusanProgramID')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -250,7 +262,7 @@
                                                 success: function(response) {
                                                     jurusanDropdown.empty();
                                                     jurusanDropdown.append(
-                                                        '<option value="" disabled selected>-- Pilih Jurusan Program --</option>'
+                                                        '<option value="" selected>-- Pilih Jurusan Program --</option>'
                                                     );
                                                     response.forEach(
                                                         function(

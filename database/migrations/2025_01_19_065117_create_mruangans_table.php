@@ -18,7 +18,7 @@ return new class extends Migration
             $table->Integer('KapasitasRuang');
             $table->unsignedBigInteger('GedungID');
             $table->enum('StatusRuang', ['Active', 'InActive']);
-            $table->enum('StatusBooked', ['booked', 'available']);
+            $table->enum('StatusBooked', ['Booked', 'Available']);
             $table->text('Keterangan')->nullable();
             $table->timestamps();
 

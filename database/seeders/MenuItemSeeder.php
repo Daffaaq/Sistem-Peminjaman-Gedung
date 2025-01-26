@@ -55,9 +55,9 @@ class MenuItemSeeder extends Seeder
                     'menu_group_id' => 2,
                 ],
                 [
-                    'name' => 'Ruangan',
-                    'route' => 'master-management/ruangan',
-                    'permission_name' => 'ruangan.index',
+                    'name' => 'Ruang',
+                    'route' => 'master-management/ruang',
+                    'permission_name' => 'ruang.index',
                     'menu_group_id' => 2,
                 ],
                 [

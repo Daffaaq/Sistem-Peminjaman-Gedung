@@ -104,11 +104,11 @@ class RoleAndPermissionSeeder extends Seeder
         Permission::create(['name' => 'gedung.edit']);
         Permission::create(['name' => 'gedung.destroy']);
 
-        //ruangan
-        Permission::create(['name' => 'ruangan.index']);
-        Permission::create(['name' => 'ruangan.create']);
-        Permission::create(['name' => 'ruangan.edit']);
-        Permission::create(['name' => 'ruangan.destroy']);
+        //ruang
+        Permission::create(['name' => 'ruang.index']);
+        Permission::create(['name' => 'ruang.create']);
+        Permission::create(['name' => 'ruang.edit']);
+        Permission::create(['name' => 'ruang.destroy']);
 
         //internal-organisasi
         Permission::create(['name' => 'internal-organisasi.index']);
