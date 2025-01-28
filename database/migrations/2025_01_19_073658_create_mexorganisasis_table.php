@@ -15,7 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('NamaEksternalOrganisasi');
             $table->string('KodeEksternalOrganisasi');
+            $table->unsignedBigInteger('FakultasID')->nullable()->index();
+            $table->unsignedBigInteger('JurusanProgramID')->nullable()->index();
+            $table->unsignedBigInteger('UniversitasID')->nullable()->index();
+            $table->enum('StatusEksternalOrganisasi', ['Active', 'InActive'])->default('Active');
+            $table->text('Keterangan')->nullable();
             $table->timestamps();
+
+            $table->foreign('FakultasID')->references('id')->on('mfakultas')->onDelete('cascade');
+            $table->foreign('JurusanProgramID')->references('id')->on('mjurusanprograms')->onDelete('cascade');
+            $table->foreign('UniversitasID')->references('id')->on('muniversitas')->onDelete('cascade');
         });
     }
 

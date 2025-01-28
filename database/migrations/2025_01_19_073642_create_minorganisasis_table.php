@@ -13,9 +13,19 @@ return new class extends Migration
     {
         Schema::create('minorganisasis', function (Blueprint $table) {
             $table->id();
-            $table->string('NamaInternalOrganisasi');
+            $table->string('NamaInternalOrganisasi')->unique();
             $table->string('KodeInternalOrganisasi');
+            $table->unsignedBigInteger('FakultasID')->nullable()->index();
+            $table->unsignedBigInteger('JurusanProgramID')->nullable()->index();
+            $table->unsignedBigInteger('UniversitasID')->nullable()->index();
+            $table->enum('StatusInternalOrganisasi', ['Active', 'InActive'])->default('Active');
+            $table->text('Keterangan')->nullable();
+            $table->enum('TipeOrganisasi', ['Universitas', 'Fakultas', 'JurusanProgram']);
             $table->timestamps();
+
+            $table->foreign('FakultasID')->references('id')->on('mfakultas')->onDelete('cascade');
+            $table->foreign('JurusanProgramID')->references('id')->on('mjurusanprograms')->onDelete('cascade');
+            $table->foreign('UniversitasID')->references('id')->on('muniversitas')->onDelete('cascade');
         });
     }
 

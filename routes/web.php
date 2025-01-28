@@ -6,6 +6,7 @@ use App\Http\Controllers\GedungController;
 use App\Http\Controllers\JurusanProgramController;
 use App\Http\Controllers\Menu\MenuGroupController;
 use App\Http\Controllers\Menu\MenuItemController;
+use App\Http\Controllers\OrganisasiInternalController;
 use App\Http\Controllers\ProdiController;
 use App\Http\Controllers\RoleAndPermission\AssignPermissionController;
 use App\Http\Controllers\RoleAndPermission\AssignUserToRoleController;
@@ -65,6 +66,13 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         //ruang
         Route::resource('ruang', RuangController::class);
         Route::get('/getGedung', [RuangController::class, 'getGedung'])->name('getGedung');
+    });
+
+    //organization Management
+    Route::prefix('organization-management')->group(function () {
+        //internal-organisasi
+        Route::resource('internal-organisasi', OrganisasiInternalController::class);
+        Route::get('/dataMaster', [OrganisasiInternalController::class, 'GetUniversitas'])->name('get-universitas');
     });
 
     //user list

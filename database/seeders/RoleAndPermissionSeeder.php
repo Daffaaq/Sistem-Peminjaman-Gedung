@@ -23,7 +23,7 @@ class RoleAndPermissionSeeder extends Seeder
         // create permissions
         Permission::create(['name' => 'dashboard']);
         Permission::create(['name' => 'master.management']);
-        Permission::create(['name' => 'Organisazation.management']);
+        Permission::create(['name' => 'organization.management']);
         Permission::create(['name' => 'user.management']);
         Permission::create(['name' => 'role.permission.management']);
         Permission::create(['name' => 'menu.management']);

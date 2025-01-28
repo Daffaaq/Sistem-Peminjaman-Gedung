@@ -30,8 +30,8 @@ class MenuGroupSeeder extends Seeder
                 ],
                 [
                     'name' => 'Organisazation Management',  // Menambahkan Master Management
-                    'icon' => 'fas fa-cogs', // Pilihan ikon, bisa disesuaikan
-                    'permission_name' => 'oraganization.management', // Nama permission yang sesuai
+                    'icon' => 'fas fa-sitemap', // Pilihan ikon, bisa disesuaikan
+                    'permission_name' => 'organization.management', // Nama permission yang sesuai
                 ],
                 [
                     'name' => 'Users Management',
